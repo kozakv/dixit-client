@@ -1,0 +1,14 @@
+{{#if isStarted}}
+  <tr class="started">
+{{else}}
+  <tr>
+{{/if}}
+  <td>{{title}}</td>
+  <td>{{isStarted}}</td>
+  <td>
+    {{#each players}}
+    {{nickname}}
+    {{/each}}
+  </td>
+  <td>Join</td>
+</tr>
