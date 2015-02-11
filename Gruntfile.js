@@ -6,8 +6,7 @@ module.exports = function(grunt) {
     // Metadata.
     pkg: grunt.file.readJSON('package.json'),
 
-    buildDir: "build", //../../../glassfish4/glassfish/domains/domain1/applications/dixit-0.0.1",
-    distDir: "dist",
+    locals: grunt.file.readJSON('locals.json'),
 
     banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
       '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
@@ -23,7 +22,7 @@ module.exports = function(grunt) {
       dist: {
         src: ["src/js/<%= pkg.name %>.js",
               "src/js/*.js"],
-        dest: '<%= buildDir %>/js/<%= pkg.name %>.js'
+        dest: '<%= locals.buildDir %>/js/<%= pkg.name %>.js'
       }
     },
     handlebars: {
@@ -38,7 +37,7 @@ module.exports = function(grunt) {
           partialsPathRegex: /\/partials\//
         },
         files: {
-          "<%= buildDir %>/js/templates.js": "src/templates/**/*.hbs"
+          "<%= locals.buildDir %>/js/templates.js": "src/templates/**/*.hbs"
         }
       }
     },
@@ -47,44 +46,44 @@ module.exports = function(grunt) {
         banner: '<%= banner %>'
       },
       libs: {
-        src: '<%= buildDir %>/js/libs.js',
-        dest: '<%= distDir %>/js/libs.min.js'
+        src: '<%= locals.buildDir %>/js/libs.js',
+        dest: '<%= locals.distDir %>/js/libs.min.js'
       },
       application: {
         src: '<%= concat.dist.dest %>',
-        dest: '<%= distDir %>/js/<%= pkg.name %>.min.js'
+        dest: '<%= locals.distDir %>/js/<%= pkg.name %>.min.js'
       },
       templates: {
-        src: "<%= buildDir %>/js/templates.js",
-        dest: "<%= distDir %>/js/templates.min.js"
+        src: "<%= locals.buildDir %>/js/templates.js",
+        dest: "<%= locals.distDir %>/js/templates.min.js"
       }
     },
     less: {
       development: {
         options: ["assets/css"],
         files: {
-          "<%= buildDir %>/css/main.css": "src/less/main.less"
+          "<%= locals.buildDir %>/css/main.css": "src/less/main.less"
         }
       },
       production: {
         options: ["assets/css"],
         cleancss: true,
         files: {
-          "<%= distDir %>/css/main.css": "src/less/main.less"
+          "<%= locals.distDir %>/css/main.css": "src/less/main.less"
         }
       }
     },
     copy: {
       development: {
         files: [
-          { expand: true, cwd: "src/images/", src: "**/*", dest: "<%= buildDir %>/images/" },
-          { expand: true, cwd: "src/sounds/", src: "**/*", dest: "<%= buildDir %>/sounds/" }
+          { expand: true, cwd: "src/images/", src: "**/*", dest: "<%= locals.buildDir %>/images/" },
+          { expand: true, cwd: "src/sounds/", src: "**/*", dest: "<%= locals.buildDir %>/sounds/" }
         ]
       },
       production: {
         files: [
-          { expand: true, cwd: "src/images/", src: "**/*", dest: "<%= distDir %>/images/" },
-          { expand: true, cwd: "src/sounds/", src: "**/*", dest: "<%= distDir %>/sounds/" }
+          { expand: true, cwd: "src/images/", src: "**/*", dest: "<%= locals.distDir %>/images/" },
+          { expand: true, cwd: "src/sounds/", src: "**/*", dest: "<%= locals.distDir %>/sounds/" }
         ]
       }
     },
@@ -93,21 +92,21 @@ module.exports = function(grunt) {
     },
     bower_concat: {
       development: {
-        cssDest: "<%= buildDir %>/css/bower.css",
-        dest: "<%= buildDir %>/js/libs.js"
+        cssDest: "<%= locals.buildDir %>/css/bower.css",
+        dest: "<%= locals.buildDir %>/js/libs.js"
       }
     },
     connect: {
       development: {
         options: {
           port: 9009,
-          base: "<%= buildDir %>"
+          base: "<%= locals.buildDir %>"
         }
       },
       production: {
         options: {
           port: 9000,
-          base: "<%= distDir %>"
+          base: "<%= locals.distDir %>"
         }
       }
     },
