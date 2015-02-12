@@ -1,11 +1,11 @@
 {
-	"title": "Dixit Client",
-	"name" : "dixit_client",
-	"author": {
-		"name": "Vadim Kozak, Dima Levchenko",
-		"email": "ldimat@gmail.com"
-	},
-	"version": "0.0.1",
+  "title": "Dixit Client",
+  "name": "dixit_client",
+  "author": {
+    "name": "Vadim Kozak, Dima Levchenko",
+    "email": "ldimat@gmail.com"
+  },
+  "version": "0.0.1",
   "engines": {
     "node": ">= 0.10.0"
   },
@@ -20,6 +20,7 @@
     "grunt-contrib-handlebars": "^0.9.2",
     "grunt-contrib-less": "^1.0.0",
     "grunt-contrib-uglify": "~0.5.0",
-    "grunt-contrib-watch": "~0.6.1"
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-contrib-yuidoc": "^0.7.0"
   }
 }

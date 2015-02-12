@@ -110,10 +110,22 @@ module.exports = function(grunt) {
         }
       }
     },
+    yuidoc: {
+      compile: {
+        name: "",
+        description: "",
+        version: "",
+        options: {
+          paths: "src/js/",
+          themedir: "yuidoc-theme/",
+          outdir: "<%= locals.docsDir %>"
+        }
+      }
+    },
     watch: {
       js: {
-        files: '<%= concat.dist.src %>',
-        tasks: ['concat']
+        files: "<%= concat.dist.src %>",
+        tasks: ["concat", "yuidoc"]
       },
       css: {
         files: ["src/less/**/*.less"],
@@ -144,9 +156,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-copy");
   grunt.loadNpmTasks("grunt-contrib-less");
   grunt.loadNpmTasks("grunt-contrib-watch");
+  grunt.loadNpmTasks("grunt-contrib-yuidoc");
 
   grunt.registerTask("build-all", ["bower:install", "bower_concat", "concat", "less:development", "copy:development",
-                                   "handlebars"]);
+                                   "handlebars", "yuidoc"]);
   grunt.registerTask("default", ["build-all", "connect:development", "watch"]);
   grunt.registerTask("build-and-watch", ["build-all", "watch"]);
   grunt.registerTask("deploy", ["build-all", "uglify", "less:production", "copy:production"]);
