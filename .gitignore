@@ -13,4 +13,4 @@ locals.json
 docs
 coverage
 karma_html
-test/lib.js
+test/libs.js

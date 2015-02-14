@@ -126,8 +126,12 @@ module.exports = function(grunt) {
       }
     },
     karma: {
-      unit: {
+      home: {
         configFile: 'karma.conf.js'
+      },
+      ci: {
+        configFile: 'karma.conf.js',
+        reporters: ["dots", "DHTML", "coverage"]
       }
     },
     watch: {
@@ -173,6 +177,7 @@ module.exports = function(grunt) {
   grunt.registerTask("build-and-watch", ["build-all", "watch"]);
   grunt.registerTask("deploy", ["build-all", "uglify", "less:production", "copy:production"]);
   grunt.registerTask("deploy-site", ["deploy", "connect:production:keepalive"]);
-  grunt.registerTask("test", ["bower:install", "bower_concat:test", "karma"]);
+  grunt.registerTask("test", ["bower:install", "bower_concat:test", "karma:home"]);
+  grunt.registerTask("test:ci", ["bower:install", "bower_concat:test", "karma:ci"]);
 
 };
