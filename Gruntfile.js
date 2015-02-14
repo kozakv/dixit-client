@@ -122,6 +122,11 @@ module.exports = function(grunt) {
         }
       }
     },
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js'
+      }
+    },
     watch: {
       js: {
         files: "<%= concat.dist.src %>",
@@ -157,6 +162,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-less");
   grunt.loadNpmTasks("grunt-contrib-watch");
   grunt.loadNpmTasks("grunt-contrib-yuidoc");
+  grunt.loadNpmTasks('grunt-karma');
 
   grunt.registerTask("build-all", ["bower:install", "bower_concat", "concat", "less:development", "copy:development",
                                    "handlebars", "yuidoc"]);

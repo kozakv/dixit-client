@@ -11,3 +11,4 @@ dist/images
 dist/sounds
 locals.json
 docs
+coverage
