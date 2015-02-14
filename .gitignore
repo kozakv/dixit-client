@@ -12,3 +12,5 @@ dist/sounds
 locals.json
 docs
 coverage
+karma_html
+test/lib.js

@@ -15,6 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'test/libs.js',
       'src/js/**/*.js',
       'test/chai.js',
       'test/sinon.js',
@@ -36,7 +37,12 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['nyan', 'coverage'],
+    reporters: ['nyan', 'coverage', 'DHTML'],
+
+    dhtmlReporter: {
+      'outputFile' : '/karma_html/report.html',
+      'exclusiveSections': true
+    },
 
     coverageReporter: {
       dir: 'coverage/',

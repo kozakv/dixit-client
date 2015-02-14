@@ -94,6 +94,9 @@ module.exports = function(grunt) {
       development: {
         cssDest: "<%= locals.buildDir %>/css/bower.css",
         dest: "<%= locals.buildDir %>/js/libs.js"
+      },
+      test: {
+        dest: "test/libs.js"
       }
     },
     connect: {
@@ -170,5 +173,6 @@ module.exports = function(grunt) {
   grunt.registerTask("build-and-watch", ["build-all", "watch"]);
   grunt.registerTask("deploy", ["build-all", "uglify", "less:production", "copy:production"]);
   grunt.registerTask("deploy-site", ["deploy", "connect:production:keepalive"]);
+  grunt.registerTask("test", ["bower:install", "bower_concat:test", "karma"]);
 
 };
