@@ -16,9 +16,11 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'test/libs.js',
-      'src/js/**/*.js',
+      'src/js/dixit-api.js',
       'test/chai.js',
       'test/sinon.js',
+      'test/phantomjs-workaround.js',
+      'test/mocks/**/*.js',
       'test/unit/**/*.js'
     ],
 
@@ -68,7 +70,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'],
+    browsers: ["PhantomJS"],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits

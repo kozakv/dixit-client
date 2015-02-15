@@ -109,7 +109,7 @@ var DixitServer = {
       function(resp) {
         if(resp.status == 200) {
           this.loginId = resp.responseJSON.id;
-          this.nickname = nickname;
+          this.nickname = resp.responseJSON.nickname;
           if(successCb) successCb(this.loginId, this.nickname);
         } else if(failCb) failCb(resp);
       }.bind(this)
