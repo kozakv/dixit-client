@@ -94,6 +94,9 @@ module.exports = function(grunt) {
       development: {
         cssDest: "<%= locals.buildDir %>/css/bower.css",
         dest: "<%= locals.buildDir %>/js/libs.js"
+      },
+      test: {
+        dest: "test/libs.js"
       }
     },
     connect: {
@@ -120,6 +123,15 @@ module.exports = function(grunt) {
           themedir: "yuidoc-theme/",
           outdir: "<%= locals.docsDir %>"
         }
+      }
+    },
+    karma: {
+      home: {
+        configFile: 'karma.conf.js'
+      },
+      ci: {
+        configFile: 'karma.conf.js',
+        reporters: ["dots", "DHTML", "coverage"]
       }
     },
     watch: {
@@ -157,6 +169,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks("grunt-contrib-less");
   grunt.loadNpmTasks("grunt-contrib-watch");
   grunt.loadNpmTasks("grunt-contrib-yuidoc");
+  grunt.loadNpmTasks('grunt-karma');
 
   grunt.registerTask("build-all", ["bower:install", "bower_concat", "concat", "less:development", "copy:development",
                                    "handlebars", "yuidoc"]);
@@ -164,5 +177,7 @@ module.exports = function(grunt) {
   grunt.registerTask("build-and-watch", ["build-all", "watch"]);
   grunt.registerTask("deploy", ["build-all", "uglify", "less:production", "copy:production"]);
   grunt.registerTask("deploy-site", ["deploy", "connect:production:keepalive"]);
+  grunt.registerTask("test", ["bower:install", "bower_concat:test", "karma:home"]);
+  grunt.registerTask("test:ci", ["bower:install", "bower_concat:test", "karma:ci"]);
 
 };

@@ -11,3 +11,6 @@ dist/images
 dist/sounds
 locals.json
 docs
+coverage
+karma_html
+test/libs.js
