@@ -1,6 +1,6 @@
 window.VERSION = "0.0.1";
 
-function init() {
+$(function init() {
   console.log("Initializing application.");
-  document.body.innerHTML = JST.main({ version: VERSION });
-}
+  DixitRouter.init();
+});

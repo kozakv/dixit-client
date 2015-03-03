@@ -21,6 +21,8 @@ module.exports = function(grunt) {
       },
       dist: {
         src: ["src/js/<%= pkg.name %>.js",
+              "src/js/extend.js",
+              "src/js/view.js",
               "src/js/*.js"],
         dest: '<%= locals.buildDir %>/js/<%= pkg.name %>.js'
       }

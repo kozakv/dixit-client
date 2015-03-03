@@ -4,6 +4,16 @@
  * Most of commands work only when player is logged in. So start with calling <code>loginInfo</code> and
  * <code>login</code> methods.
  *
+ * Rooms related functions require room id as first parameter. So keep it when you join room, or create one.
+ *
+ * During the game - you should periodically poll server with
+ * {{#crossLink "DixitServer/roomFullInfo:method"}}{{/crossLink}} to know current game state. For example, when it is
+ * <code>MOTTO</code>, you should check if you are <code>turnOwner</code>, and make propper
+ * {{#crossLink "DixitServer/setMotto:method"}}{{/crossLink}} call to set motto of a round and put first card.
+ *
+ * You also should not forget to call {{#crossLink "DixitServer/ready:method"}}{{/crossLink}} on <code>RESULTS</code>
+ * state of room to start play next round.
+ *
  * @class DixitServer
  */
 var DixitServer = {
@@ -175,6 +185,327 @@ var DixitServer = {
           if(successCb) successCb(this.rooms);
         } else {
           this.rooms = [];
+          if(failCb) failCb(resp);
+        }
+      }.bind(this)
+    );
+  },
+
+  /**
+   * Gets short information about some room. Use this method before game starts, to check if room is full.
+   *
+   * Example:
+   *
+   *     DixitServer.roomInfo(
+   *         "room-777",
+   *         function(info) {
+   *             consonle.log(info.isNew ? "Room is not yet ready." : "Game is already started");
+   *         },
+   *         function(jqueryResp) {
+   *         }
+   *     );
+   *
+   * @method roomInfo
+   * @static
+   * @param {String} roomId id of room to describe,
+   * @param {Function} successCb called when room info is available. it's only parameter is room description,
+   * @param {Function} failCb called if something went wrong. it's only parameter is jquery response object.
+   */
+  roomInfo: function(roomId, successCb, failCb) {
+    return this._get(
+      "room/" + roomId,
+      function(resp) {
+        if(resp.status == 200) {
+          if(successCb) successCb(resp.responseJSON);
+        } else {
+          this.rooms = [];
+          if(failCb) failCb(resp);
+        }
+      }.bind(this)
+    );
+  },
+
+  /**
+   * Gets complete private vision of the game by currently logged in user. Use this method during the game to know what
+   * is going on.
+   *
+   * Example:
+   *
+   *     DixitServer.roomFullInfo(
+   *         "room-777",
+   *         function(fullInfo) {
+   *             consonle.log("Current game state: " + fullInfo.state);
+   *         },
+   *         function(jqueryResp) {
+   *         }
+   *     );
+   *
+   * @method roomFullInfo
+   * @static
+   * @param {String} roomId id of room to describe,
+   * @param {Function} successCb called when room info is available. it's only parameter is room description,
+   * @param {Function} failCb called if something went wrong. it's only parameter is jquery response object.
+   */
+  roomFullInfo: function(roomId, successCb, failCb) {
+    return this._get(
+      "room/" + roomId + "/full",
+      function(resp) {
+        if(resp.status == 200) {
+          if(successCb) successCb(resp.responseJSON);
+        } else {
+          this.rooms = [];
+          if(failCb) failCb(resp);
+        }
+      }.bind(this)
+    );
+  },
+
+  /**
+   * Creates room for user. Logged in user, who created the room, is automatically logged in. Very important attribute
+   * is <code>id</code> - it is used in subsequant requests to identify subjects of all user's actions.
+   *
+   * Example:
+   *
+   *     DixitServer.createRoom(
+   *         "The nice room title",
+   *         function(info) {
+   *             consonle.log("New room id is: " + info.id);
+   *         },
+   *         function(jqueryResp) {
+   *         }
+   *     );
+   *
+   * @method createRoom
+   * @static
+   * @param {String} title of the room to introduce it to other players,
+   * @param {Function} successCb called when room is created. it's only parameter is short room description,
+   * @param {Function} failCb called if something went wrong. it's only parameter is jquery response object.
+   */
+  createRoom: function(title, successCb, failCb) {
+    return this._post(
+      "room/create",
+      {
+        title: title
+      },
+      function(resp) {
+        if(resp.status == 200) {
+          if(successCb) successCb(resp.responseJSON);
+        } else {
+          if(failCb) failCb(resp);
+        }
+      }.bind(this)
+    );
+  },
+
+  /**
+   * Join already created room.
+   *
+   * Example:
+   *
+   *     DixitServer.joinRoom(
+   *         "room-777"
+   *         function(info) {
+   *             consonle.log(info.isNew ? "Room is not full yet..." : "It's ok, we can start game.");
+   *         },
+   *         function(jqueryResp) {
+   *         }
+   *     );
+   *
+   * @method joinRoom
+   * @static
+   * @param {String} roomId to join,
+   * @param {Function} successCb called when room is joined. it's only parameter is short room description,
+   * @param {Function} failCb called if something went wrong. it's only parameter is jquery response object.
+   */
+  joinRoom: function(roomId, successCb, failCb) {
+    return this._post(
+      "room/" + roomId + "/join",
+      {},
+      function(resp) {
+        if(resp.status == 200) {
+          if(successCb) successCb(resp.responseJSON);
+        } else {
+          if(failCb) failCb(resp);
+        }
+      }.bind(this)
+    );
+  },
+
+  /**
+   * Quit room.
+   *
+   * Example:
+   *
+   *     DixitServer.joinRoom(
+   *         "room-777"
+   *         function() {
+   *             console.log("Good bye !");
+   *         },
+   *         function(jqueryResp) {
+   *         }
+   *     );
+   *
+   * @method quitRoom
+   * @static
+   * @param {String} roomId to quit,
+   * @param {Function} successCb called when room is quitted with no parameters,
+   * @param {Function} failCb called if something went wrong. it's only parameter is jquery response object.
+   */
+  quitRoom: function(roomId, successCb, failCb) {
+    return this._post(
+      "room/" + roomId + "/quit",
+      {},
+      function(resp) {
+        if(resp.status == 200) {
+          if(successCb) successCb();
+        } else {
+          if(failCb) failCb(resp);
+        }
+      }.bind(this)
+    );
+  },
+
+  /**
+   * Set motto of some room. Use this method when you are turn owner, and game state is MOTTO.
+   *
+   * Example:
+   *
+   *     DixitServer.setMotto(
+   *         "room-777", "The blueness of eyes", "card-123",
+   *         function(fullInfo) {
+   *             console.log("Check your motto: " + fullInfo.motto);
+   *         },
+   *         function(jqueryResp) {
+   *         }
+   *     );
+   *
+   * @method setMotto
+   * @static
+   * @param {String} roomId to set motto on,
+   * @param {String} motto of the round,
+   * @param {String} cardId to put along with set motto,
+   * @param {Function} successCb called when motto is successfuly set. Only parameter is full room description,
+   * @param {Function} failCb called if something went wrong. it's only parameter is jquery response object.
+   */
+  setMotto: function(roomId, motto, cardId, successCb, failCb) {
+    return this._post(
+      "room/" + roomId + "/set-motto",
+      {
+        motto: motto,
+        cardId: cardId
+      },
+      function(resp) {
+        if(resp.status == 200) {
+          if(successCb) successCb(resp.responseJSON);
+        } else {
+          if(failCb) failCb(resp);
+        }
+      }.bind(this)
+    );
+  },
+
+  /**
+   * Put card when room state is CARDS.
+   *
+   * Example:
+   *
+   *     DixitServer.putCard(
+   *         "room-777", "card-321",
+   *         function(fullInfo) {
+   *             console.log("Room state: " + fullInfo.state);
+   *         },
+   *         function(jqueryResp) {
+   *         }
+   *     );
+   *
+   * @method putCard
+   * @static
+   * @param {String} roomId to put card on,
+   * @param {String} cardId to put along with set motto,
+   * @param {Function} successCb called when card is successfuly put. Only parameter is full room description,
+   * @param {Function} failCb called if something went wrong. it's only parameter is jquery response object.
+   */
+  putCard: function(roomId, cardId, successCb, failCb) {
+    return this._post(
+      "room/" + roomId + "/put-card",
+      {
+        cardId: cardId
+      },
+      function(resp) {
+        if(resp.status == 200) {
+          if(successCb) successCb(resp.responseJSON);
+        } else {
+          if(failCb) failCb(resp);
+        }
+      }.bind(this)
+    );
+  },
+
+  /**
+   * Make guess when room state is VOTES.
+   *
+   * Example:
+   *
+   *     DixitServer.makeGuess(
+   *         "room-777", "card-213",
+   *         function(fullInfo) {
+   *             console.log("Room state: " + fullInfo.state);
+   *         },
+   *         function(jqueryResp) {
+   *         }
+   *     );
+   *
+   * @method makeGuess
+   * @static
+   * @param {String} roomId to guess card in,
+   * @param {String} cardId card player think belongs to turn owner,
+   * @param {Function} successCb called when card is successfuly voted. Only parameter is full room description,
+   * @param {Function} failCb called if something went wrong. it's only parameter is jquery response object.
+   */
+  makeGuess: function(roomId, cardId, successCb, failCb) {
+    return this._post(
+      "room/" + roomId + "/guess-card",
+      {
+        cardId: cardId
+      },
+      function(resp) {
+        if(resp.status == 200) {
+          if(successCb) successCb(resp.responseJSON);
+        } else {
+          if(failCb) failCb(resp);
+        }
+      }.bind(this)
+    );
+  },
+
+  /**
+   * Signal room that player is ready to continue, when room's state is RESULTS.
+   *
+   * Example:
+   *
+   *     DixitServer.ready(
+   *         "room-777",
+   *         function(fullInfo) {
+   *             console.log("Room state: " + fullInfo.state);
+   *         },
+   *         function(jqueryResp) {
+   *         }
+   *     );
+   *
+   * @method ready
+   * @static
+   * @param {String} roomId to continue,
+   * @param {Function} successCb called when you are heard. Only parameter is full room description,
+   * @param {Function} failCb called if something went wrong. it's only parameter is jquery response object.
+   */
+  ready: function(roomId, successCb, failCb) {
+    return this._post(
+      "room/" + roomId + "/ready",
+      {},
+      function(resp) {
+        if(resp.status == 200) {
+          if(successCb) successCb(resp.responseJSON);
+        } else {
           if(failCb) failCb(resp);
         }
       }.bind(this)
