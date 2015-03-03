@@ -1,5 +1,5 @@
 {
-  "buildDir": "../../../glassfish4/glassfish/domains/domain1/applications/dixit-0.0.1",
+  "buildDir": "build",
   "distDir": "dist",
 	"docsDir": "docs"
 }
