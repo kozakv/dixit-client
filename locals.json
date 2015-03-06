@@ -1,5 +1,6 @@
 {
-  "buildDir": "build",
-  "distDir": "dist",
-	"docsDir": "docs"
+"buildDir": "/Users/Vadim/Projects/glassfish4/glassfish/domains/domain1/applications/dixit-0.0.1",
+"distDir": "dist",
+"docsDir": "docs"
+
 }
