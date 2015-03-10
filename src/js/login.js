@@ -2,42 +2,43 @@ DixitViews.Login = View.extend({
   template: JST.login,
 
   afterRender: function() {
-    /*$("#login-button", this.$el).click(function() {
-      DixitRouter.navigateTo("Rooms");
-	});
-*/
+
 	$("#login-button", this.$el).click(function() {
-    $(".block_page, .waiting_spinner", this.$el).show();
+    $(".waiting_spinner", this.$el).show();
+    $(".login-form", this.$el).hide();
     DixitServer.login($("#login", this.$el).val(),
       function () {
-        $(".block_page, .waiting_spinner", this.$el).hide();
-        $(".login-form", this.$el).hide();
+        $(".waiting_spinner", this.$el).hide();
         $(".name-form", this.$el).show();
+        console.log("Login successful");
         DixitServer.loginInfo(function(loginId, nickname) {
-          $("#name", this.$el).html("Hello, " + nickname + "!");             
+          $("#name", this.$el).html("Hello,</br><b>" + nickname + "</b>!");             
           },
           function(jqueryReq) {
-            console.log("Failed to call server!");
+            $(".login-form, .name-form, .waiting_spinner", this.$el).hide();
+            $(".server_failed", this.$el).show();
           }
         );
       },
       function(jqueryReq) {
-        console.log("Failed to call server!");
+        $(".login-form, .name-form, .waiting_spinner", this.$el).hide();
+        $(".server_failed", this.$el).show();
       }
     );
   });
 
 	$("#logout-button", this.$el).click(function() {
-		$(".block_page, .waiting_spinner", this.$el).show();
+		$(".waiting_spinner", this.$el).show();
+    $(".name-form", this.$el).hide();
     DixitServer.logout(
 			function() {
-        $(".block_page, .waiting_spinner", this.$el).hide();
+        $(".waiting_spinner", this.$el).hide();
 				$(".login-form", this.$el).show();
-				$(".name-form", this.$el).hide();
 				console.log("Log out successful");
 			},
       function(jqueryResp) {
- 				console.log("Server call failed");
+        $(".login-form, .name-form, .waiting_spinner", this.$el).hide();
+ 				$(".server_failed", this.$el).show();
 			}
 		);
 	});
@@ -50,17 +51,18 @@ DixitViews.Login = View.extend({
 	DixitServer.loginInfo(
     function(loginId, nickname) {
   		if (nickname != null) {
-				$(".login-form", this.$el).hide();
+				$(".login-form, .waiting_spinner, .server_failed", this.$el).hide();
 				$(".name-form", this.$el).show();
-				$("#name", this.$el).html("Hello, " + nickname + "!");		  				
+				$("#name", this.$el).html("Hello,<br/><b>" + nickname + "</b>!");		  				
   		}
   		else {
   			$(".login-form", this.$el).show();
-				$(".name-form", this.$el).hide();
+				$(".name-form, .waiting_spinner, .server_failed", this.$el).hide();
   		};
     },
     function(jqueryReq) {
-      console.log("Failed to call server!");
+      $(".login-form, .name-form, .waiting_spinner", this.$el).hide();
+      $(".server_failed", this.$el).show();
     }
   );
 

@@ -1,10 +1,22 @@
 <div class="login-form">
   Name yourself:<br/>
   <input id="login" place-holder="Your Login" /><br/>
-  <button id="login-button">Login</button><br/>
+  <div class="login-buttons">
+    <div id="login-button">Login</div>
+  </div>
 </div>
 <div class="name-form">
-  <div id="name"></div>	
-  <button id="logout-button">Logout</button>
-  <button id="gotorooms-button">To rooms</button>
+  <div id="name"></div>
+  <div class="login-buttons">	
+  	<div id="logout-button">Logout</div>
+    <div id="gotorooms-button">To rooms</div>
+  </div>
 </div>
+<div class="waiting_spinner">
+  	<div class="rect1"></div>
+  	<div class="rect2"></div>
+  	<div class="rect3"></div>
+  	<div class="rect4"></div>
+  	<div class="rect5"></div>
+  </div>
+  <div class="server_failed">Failed to call server!</div>
