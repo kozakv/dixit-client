@@ -14,3 +14,4 @@ docs
 coverage
 karma_html
 test/libs.js
+fabfile.pyc
