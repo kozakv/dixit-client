@@ -3,49 +3,11 @@ DixitViews.Login = View.extend({
 
   afterRender: function() {
 
-	$("#login-button", this.$el).click(function() {
-    $(".waiting_spinner", this.$el).show();
-    $(".login-form", this.$el).hide();
-    DixitServer.login($("#login", this.$el).val(),
-      function () {
-        $(".waiting_spinner", this.$el).hide();
-        $(".name-form", this.$el).show();
-        console.log("Login successful");
-        DixitServer.loginInfo(function(loginId, nickname) {
-          $("#name", this.$el).html("Hello,</br><b>" + nickname + "</b>!");             
-          },
-          function(jqueryReq) {
-            $(".login-form, .name-form, .waiting_spinner", this.$el).hide();
-            $(".server_failed", this.$el).show();
-          }
-        );
-      },
-      function(jqueryReq) {
-        $(".login-form, .name-form, .waiting_spinner", this.$el).hide();
-        $(".server_failed", this.$el).show();
-      }
-    );
-  });
+	$("#login-button", this.$el).click(this.onLoginClick.bind(this));
 
-	$("#logout-button", this.$el).click(function() {
-		$(".waiting_spinner", this.$el).show();
-    $(".name-form", this.$el).hide();
-    DixitServer.logout(
-			function() {
-        $(".waiting_spinner", this.$el).hide();
-				$(".login-form", this.$el).show();
-				console.log("Log out successful");
-			},
-      function(jqueryResp) {
-        $(".login-form, .name-form, .waiting_spinner", this.$el).hide();
- 				$(".server_failed", this.$el).show();
-			}
-		);
-	});
+	$("#logout-button", this.$el).click(this.onLogoutClick.bind(this));
 
-	$("#gotorooms-button", this.$el).click(function() {
-		DixitRouter.navigateTo("Rooms");
-	});	
+	$("#gotorooms-button", this.$el).click(function() {DixitRouter.navigateTo("Rooms"); });	
 
 
 	DixitServer.loginInfo(
@@ -60,12 +22,49 @@ DixitViews.Login = View.extend({
 				$(".name-form, .waiting_spinner, .server_failed", this.$el).hide();
   		};
     },
-    function(jqueryReq) {
-      $(".login-form, .name-form, .waiting_spinner", this.$el).hide();
-      $(".server_failed", this.$el).show();
-    }
+    this.ifServerFailed.bind(this)
   );
+},
 
 
-  }
+onLoginClick: function() {
+  $(".waiting_spinner", this.$el).show();
+  $(".login-form", this.$el).hide();
+  DixitServer.login($("#login", this.$el).val(),
+    this.ifLoginSuccess.bind(this),
+    this.ifServerFailed.bind(this)
+  );
+},
+
+onLogoutClick: function() {
+  $(".waiting_spinner", this.$el).show();
+  $(".name-form", this.$el).hide();
+  DixitServer.logout(
+    this.ifLogoutSuccess.bind(this),
+    this.ifServerFailed.bind(this)
+  );
+},
+
+ifServerFailed: function(jqueryReq) {
+  $(".login-form, .name-form, .waiting_spinner", this.$el).hide();
+  $(".server_failed", this.$el).show();
+},
+
+ifLoginSuccess: function() {
+  $(".waiting_spinner", this.$el).hide();
+  $(".name-form", this.$el).show();
+  console.log("Login successful");
+  DixitServer.loginInfo(function(loginId, nickname) {
+    $("#name", this.$el).html("Hello,</br><b>" + nickname + "</b>!");             
+    },
+    this.ifServerFailed.bind(this)
+  );
+},
+
+ifLogoutSuccess: function() {
+  $(".waiting_spinner", this.$el).hide();
+  $(".login-form", this.$el).show();
+  console.log("Log out successful");
+}
+
 });
