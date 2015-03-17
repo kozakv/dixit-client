@@ -4,13 +4,16 @@ node_modules
 build/css
 build/js
 build/images
+build/fonts
 build/sounds
 dist/css
 dist/js
 dist/images
+dist/fonts
 dist/sounds
 locals.json
 docs
 coverage
 karma_html
 test/libs.js
+fabfile.pyc

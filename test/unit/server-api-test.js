@@ -1,6 +1,6 @@
-var assert = chai.assert;
-
 describe("Server API", function(){
+  var assert = chai.assert;
+
   describe("login", function(){
     var server, loginId;
     var nickname = "dima";

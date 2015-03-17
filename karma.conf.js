@@ -17,6 +17,8 @@ module.exports = function(config) {
     files: [
       'test/libs.js',
       'src/js/dixit-api.js',
+      'src/js/extend.js',
+      'src/js/view.js',
       'test/chai.js',
       'test/sinon.js',
       'test/phantomjs-workaround.js',

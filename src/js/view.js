@@ -6,10 +6,16 @@
  *     DixitViews.Login = View.extend({
  *         template: JST.login,
  *
+ *         tagName: "span",
+ *         classNames: ["success", "label"],
+ *
  *         afterRender: function() {
  *             console.log("Login rendered");
  *         }
  *     });
+ *
+ * Preferred way to access rendered elements is through {{#crossLink "View/$:method"}}{{/crossLink}} to ensure that all
+ * the searches are performed in propper container element.
  *
  * @class View
  */
@@ -24,11 +30,29 @@ View.prototype = {
    * @attribute template
    * @type {Function}
    */
-  template: null,
+  template: function() { return ""; },
+
+  /**
+   * Container element tag name.
+   *
+   * @attribute tagName
+   * @type {String}
+   * @default "div"
+   */
+  tagName: "div",
+
+  /**
+   * Container element class names.
+   *
+   * @attribute classNames
+   * @type {Array}
+   * @default []
+   */
+  classNames: [],
 
   /**
    * JQuery dom element used to reference rendered view. Available after
-   * {{crossLink "View/render:method"}}{{/crossLink}} call.
+   * {{#crossLink "View/render:method"}}{{/crossLink}} call.
    *
    * @attribute template
    * @type {Function}
@@ -44,12 +68,45 @@ View.prototype = {
   serializeData: function() { return null; },
 
   /**
+   * Creates default container element with {{#crossLink "View/tagName:attribute"}}{{/crossLink}} and
+   * {{#crossLink "View/classNames:attribute"}}{{/crossLink}}.
+   *
+   * @method createElement
+   * @returns {Object} jQuery container object
+   */
+  createElement: function() {
+    var el = $(document.createElement(this.tagName));
+    el.attr({ "class": this.classNames });
+    return el;
+  },
+
+  /**
+   * Takes jQuery element as container and (in future) wires all the view-related events.
+   *
+   * @method setElement
+   * @returns {Object} jQuery container object
+   */
+  setElement: function(el) {
+    this.$el = (el instanceof $) ? el : $(el);
+  },
+
+  /**
+   * Takes jQuery element as container and (in future) wires all the view-related events.
+   *
+   * @method $
+   * @param {String} selector jQuery selector
+   * @returns {Object} jQuery object found using selector in view's container
+   */
+  $: function(selector) { return this.$el.find(selector); },
+
+  /**
    * Actually create view. Do not reload this yet.
    *
    * @method render
    */
   render: function() {
-    this.$el = $(this.template(this.serializeData()));
+    this.setElement(this.createElement());
+    this.$el.html($(this.template(this.serializeData())));
 
     this.afterRender();
   },
@@ -71,8 +128,12 @@ View.prototype = {
 
   /**
    * Called after view is no longer used. Should clean up useless handlers and links here.
+   *
+   * @method close
    */
-  close: function() {}
+  close: function() {
+    this.$el = null;
+  }
 };
 
 var DixitViews = {};
