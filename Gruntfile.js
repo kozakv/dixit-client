@@ -79,12 +79,14 @@ module.exports = function(grunt) {
       development: {
         files: [
           { expand: true, cwd: "src/images/", src: "**/*", dest: "<%= locals.buildDir %>/images/" },
+          { expand: true, cwd: "src/fonts/", src: "**/*", dest: "<%= locals.buildDir %>/fonts/" },
           { expand: true, cwd: "src/sounds/", src: "**/*", dest: "<%= locals.buildDir %>/sounds/" }
         ]
       },
       production: {
         files: [
           { expand: true, cwd: "src/images/", src: "**/*", dest: "<%= locals.distDir %>/images/" },
+          { expand: true, cwd: "src/fonts/", src: "**/*", dest: "<%= locals.distDir %>/fonts/" },
           { expand: true, cwd: "src/sounds/", src: "**/*", dest: "<%= locals.distDir %>/sounds/" }
         ]
       }
