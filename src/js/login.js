@@ -50,15 +50,11 @@ ifServerFailed: function(jqueryReq) {
   $(".server_failed", this.$el).show();
 },
 
-ifLoginSuccess: function() {
+ifLoginSuccess: function(loginId, nickname) {
   $(".waiting_spinner", this.$el).hide();
   $(".name-form", this.$el).show();
+  $("#name", this.$el).html("Hello,</br><b>" + nickname + "</b>!");
   console.log("Login successful");
-  DixitServer.loginInfo(function(loginId, nickname) {
-    $("#name", this.$el).html("Hello,</br><b>" + nickname + "</b>!");             
-    },
-    this.ifServerFailed.bind(this)
-  );
 },
 
 ifLogoutSuccess: function() {
