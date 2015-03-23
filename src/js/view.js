@@ -126,7 +126,7 @@ View.prototype = {
     },
 
   delegate: function(eventName, selector, listener) {
-    this.$el.on(eventName + '.delegateEvents' + this.cid, selector, listener);
+    this.$el.on(eventName + '.delegateEvents', selector, listener);
     },
 
   /**
