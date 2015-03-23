@@ -21,6 +21,8 @@
  */
 function View() {}
 
+var delegateEventSplitter = /^(\S+)\s*(.*)$/;
+
 View.extend = extend;
 
 View.prototype = {
@@ -107,9 +109,25 @@ View.prototype = {
   render: function() {
     this.setElement(this.createElement());
     this.$el.html($(this.template(this.serializeData())));
-
+    this.delegateEvents();
     this.afterRender();
   },
+
+  delegateEvents: function(events) {
+    if (!(events || (events = _.result(this, 'events')))) return this;
+    for (var key in events) {
+      var method = events[key];
+      if (!_.isFunction(method)) method = this[events[key]];
+      if (!method) continue;
+      var match = key.match(delegateEventSplitter);
+      this.delegate(match[1], match[2], _.bind(method, this));
+      }
+    return this;
+    },
+
+  delegate: function(eventName, selector, listener) {
+    this.$el.on(eventName + '.delegateEvents' + this.cid, selector, listener);
+    },
 
   /**
    * Called when all required elements are rendered and ready to use. This is user-defined part of initialization of the
