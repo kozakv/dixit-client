@@ -17,3 +17,5 @@ coverage
 karma_html
 test/libs.js
 fabfile.pyc
+
+locals.json
