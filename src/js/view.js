@@ -110,6 +110,7 @@ View.prototype = {
     this.setElement(this.createElement());
     this.$el.html($(this.template(this.serializeData())));
     this.delegateEvents();
+    this.bindUI();
     this.afterRender();
   },
 
@@ -129,6 +130,15 @@ View.prototype = {
     this.$el.on(eventName + '.delegateEvents', selector, listener);
     },
 
+  bindUI: function(ui) {
+    var obj = {};
+    if (!(ui || (ui = _.result(this, 'ui')))) return this;
+    for (var key in ui) {
+      obj[key] = $(ui[key], this.$el);
+    } 
+    this.ui = obj;
+return this;
+},
   /**
    * Called when all required elements are rendered and ready to use. This is user-defined part of initialization of the
    * view.

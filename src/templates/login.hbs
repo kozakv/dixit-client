@@ -1,22 +1,25 @@
-<div class="login-form">
+<div id="login-form" class="login_forms" style="display:none">
   Name yourself:<br/>
   <input id="login" place-holder="Your Login" /><br/>
   <div class="login-buttons">
     <div class="buttons" id="login-button">Login</div>
   </div>
 </div>
-<div class="name-form">
-  <div id="name"></div>
+
+<div id="logged-form" class="login_forms" style="display:none">
+  <div id="user-name"></div>
   <div class="login-buttons">	
   	<div class="buttons" id="logout-button">Logout</div>
     <div class="buttons" id="gotorooms-button">To rooms</div>
   </div>
 </div>
-<div class="waiting_spinner">
-  	<div class="rect1"></div>
-  	<div class="rect2"></div>
-  	<div class="rect3"></div>
-  	<div class="rect4"></div>
-  	<div class="rect5"></div>
+
+<div id="waiting-spinner" class="login_forms">
+  	<div id="ws-rect1"></div>
+  	<div id="ws-rect2"></div>
+  	<div id="ws-rect3"></div>
+  	<div id="ws-rect4"></div>
+  	<div id="ws-rect5"></div>
   </div>
-  <div class="server_failed">Failed to call server!</div>
+  
+  <div id="server-failed" style="display:none">Failed to call server!</div>

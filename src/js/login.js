@@ -7,45 +7,47 @@ DixitViews.Login = View.extend({
     "click #gotorooms-button": "navigateToRooms"
   },
 
-  afterRender: function() {
-	
-  /*$("#login-button", this.$el).click(this.onLoginClick.bind(this));
+  ui: {
+    allLoginForms: ".login_forms",
+    loginForm: "#login-form",
+    loggedForm: "#logged-form",
+    waitingSpinner: "#waiting-spinner",
+    serverFailed: "#server-failed",
+    userName: "#user-name",
+    loginInput: "#login"
+  },
 
-	$("#logout-button", this.$el).click(this.onLogoutClick.bind(this));
-
-	$("#gotorooms-button", this.$el).click(this.navigateToRooms.bind(this));*/	
-
-
-	DixitServer.loginInfo(
+afterRender: function() {
+  DixitServer.loginInfo(
     this.ifLogged.bind(this),
     this.ifServerFailed.bind(this)
   );
 },
 
-
 ifLogged: function(loginId, nickname) {
   if (nickname != null) {
-    $(".login-form, .waiting_spinner, .server_failed", this.$el).hide();
-    $(".name-form", this.$el).show();
-    $("#name", this.$el).html("Hello,<br/><b>" + nickname + "</b>!");             
+      this.ui.userName.html("Hello,<br/><b>" + nickname + "</b>!");
+      this.ui.waitingSpinner.hide();
+      this.ui.loggedForm.show();
    } else {
-    $(".login-form", this.$el).show();
-    $(".name-form, .waiting_spinner, .server_failed", this.$el).hide();
+      this.ui.waitingSpinner.hide();
+      this.ui.loginForm.show();
   };
 },
 
 onLoginClick: function() {
-  $(".waiting_spinner", this.$el).show();
-  $(".login-form", this.$el).hide();
-  DixitServer.login($("#login", this.$el).val(),
+  this.ui.waitingSpinner.show();
+  this.ui.loginForm.hide();
+  DixitServer.login(
+    this.ui.loginInput.val(),
     this.ifLoginSuccess.bind(this),
     this.ifServerFailed.bind(this)
   );
 },
 
 onLogoutClick: function() {
-  $(".waiting_spinner", this.$el).show();
-  $(".name-form", this.$el).hide();
+  this.ui.waitingSpinner.show();
+  this.ui.loggedForm.hide();
   DixitServer.logout(
     this.ifLogoutSuccess.bind(this),
     this.ifServerFailed.bind(this)
@@ -53,20 +55,20 @@ onLogoutClick: function() {
 },
 
 ifServerFailed: function(jqueryReq) {
-  $(".login-form, .name-form, .waiting_spinner", this.$el).hide();
-  $(".server_failed", this.$el).show();
+  this.ui.allLoginForms.hide();
+  this.ui.serverFailed.show();
 },
 
 ifLoginSuccess: function(loginId, nickname) {
-  $(".waiting_spinner", this.$el).hide();
-  $(".name-form", this.$el).show();
-  $("#name", this.$el).html("Hello,</br><b>" + nickname + "</b>!");
-  console.log("Login successful");
+  this.ui.waitingSpinner.hide();
+  this.ui.loggedForm.show();
+  this.ui.userName.html("Hello,</br><b>" + nickname + "</b>!");
+  console.log("Login successful with " + nickname);
 },
 
 ifLogoutSuccess: function() {
-  $(".waiting_spinner", this.$el).hide();
-  $(".login-form", this.$el).show();
+  this.ui.waitingSpinner.hide();
+  this.ui.loginForm.show();
   console.log("Log out successful");
 },
 
