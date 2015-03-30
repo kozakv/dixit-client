@@ -21,6 +21,10 @@
  */
 function View() {}
 
+
+/**
+* Cached regex to split keys for "delegate".
+*/
 var delegateEventSplitter = /^(\S+)\s*(.*)$/;
 
 View.extend = extend;
@@ -114,6 +118,24 @@ View.prototype = {
     this.afterRender();
   },
 
+  /**
+  * Set callbacks, where `this.events` is a hash of
+  * {"event selector": "callback"}
+  * pairs. Callbacks will be bound to the view, with "this" set properly.
+  * Uses event delegation for efficiency.
+  * Omitting the selector binds the event to "this.el".*
+  *   
+  * Example of usage:
+  *  
+  *   events: {
+  *     "click #login-button": "onLoginClick",
+  *     "mousedown .button"  : "invertColors",
+  *     "click .open"        : function(e) { ... }
+  *   }
+  * 
+  * @method render
+  * @param {Object} Pairs of elements: {"event selector": "callback"}
+  */
   delegateEvents: function(events) {
     if (!(events || (events = _.result(this, 'events')))) return this;
     for (var key in events) {
@@ -126,10 +148,40 @@ View.prototype = {
     return this;
     },
 
+/**
+* Add a single event listener to the view's element (or a child element
+* using `selector`). This only works for delegate-able events: not `focus`,
+* `blur`, and not `change`, `submit`, and `reset` in Internet Explorer.
+*
+* @method delegate
+* @param {String} name of event.
+* @param {String} jQuery selector of element.
+* @param {Anything} Data to be passed to the handler in event.data when an event occurs. 
+*/
   delegate: function(eventName, selector, listener) {
     this.$el.on(eventName + '.delegateEvents', selector, listener);
     },
 
+/**
+* Transform ${"selector", this.$el} elements to ui.elementName from hash
+* {elementName: "selector"}
+* for simply use.
+*   
+* Example of usage:
+*
+*   ui: {
+*     allLoginForms: ".login_forms",
+*     loginForm: "#login-form",
+*     loggedForm: "#logged-form"
+*   }
+* 
+* Call element:
+*   
+*   this.ui.nameElement.[jQuery effects]
+*
+* @method bindUi
+* @param {Object} Pairs of elements: {nameElement: "selector"}
+*/
   bindUI: function(ui) {
     var obj = {};
     if (!(ui || (ui = _.result(this, 'ui')))) return this;
@@ -139,6 +191,7 @@ View.prototype = {
     this.ui = obj;
 return this;
 },
+
   /**
    * Called when all required elements are rendered and ready to use. This is user-defined part of initialization of the
    * view.
