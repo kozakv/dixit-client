@@ -133,7 +133,7 @@ View.prototype = {
   *     "click .open"        : function(e) { ... }
   *   }
   * 
-  * @method render
+  * @method delegateEvents
   * @param {Object} Pairs of elements: {"event selector": "callback"}
   */
   delegateEvents: function(events) {
